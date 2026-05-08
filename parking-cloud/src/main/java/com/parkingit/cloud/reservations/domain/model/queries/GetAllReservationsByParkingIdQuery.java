@@ -1,0 +1,6 @@
+package com.parkingit.cloud.reservations.domain.model.queries;
+
+import java.util.UUID;
+
+public record GetAllReservationsByParkingIdQuery(UUID parkingId) {
+}
