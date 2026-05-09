@@ -13,7 +13,6 @@ public class ReservationResourceFromEntityAssembler {
                 entity.getAccessCode() != null ? entity.getAccessCode().getExpiresAt() : null,
                 entity.getAccessCode() != null ? entity.getAccessCode().getCode() : null,
                 entity.getStatus(),
-                entity.getReservationFee(),
                 entity.getEntryTime(),
                 entity.getCreatedAt()
         );

@@ -11,6 +11,7 @@ public record UpdateParkingResource(
         LocalTime openTime,
         LocalTime closeTime,
         String businessDays,
-        BigDecimal newTariff
+        BigDecimal newTariff,
+        BigDecimal newReservationFee
 ) {
 }

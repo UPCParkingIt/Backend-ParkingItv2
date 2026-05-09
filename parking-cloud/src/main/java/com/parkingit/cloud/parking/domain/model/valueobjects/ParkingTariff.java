@@ -13,16 +13,16 @@ public class ParkingTariff {
     @Column(name = "base_tariff_per_hour", nullable = false)
     private BigDecimal baseTariffPerHour;
 
-    @Column(name = "rate_currency", nullable = false, length = 3)
+    @Column(name = "tariff_currency", nullable = false, length = 3)
     private String currency = "PEN";
 
-    @Column(name = "rate_updated_at")
+    @Column(name = "tariff_updated_at")
     private Long updatedAtTimestamp;
 
     protected ParkingTariff() {}
 
-    public ParkingTariff(BigDecimal baseRatePerHour, String currency) {
-        if (baseRatePerHour == null || baseRatePerHour.compareTo(BigDecimal.ZERO) <= 0) {
+    public ParkingTariff(BigDecimal baseTariffPerHour, String currency) {
+        if (baseTariffPerHour == null || baseTariffPerHour.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Tariff must be greater than 0");
         }
 
@@ -30,7 +30,7 @@ public class ParkingTariff {
             throw new IllegalArgumentException("Currency cannot be empty");
         }
 
-        this.baseTariffPerHour = baseRatePerHour;
+        this.baseTariffPerHour = baseTariffPerHour;
         this.currency = currency.toUpperCase();
         this.updatedAtTimestamp = System.currentTimeMillis();
     }
@@ -48,12 +48,12 @@ public class ParkingTariff {
         return baseTariffPerHour.multiply(BigDecimal.valueOf(hours));
     }
 
-    public void update(BigDecimal newRate) {
-        if (newRate == null || newRate.compareTo(BigDecimal.ZERO) <= 0) {
+    public void update(BigDecimal newTariff) {
+        if (newTariff == null || newTariff.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("New tariff must be greater than 0");
         }
 
-        this.baseTariffPerHour = newRate;
+        this.baseTariffPerHour = newTariff;
         this.updatedAtTimestamp = System.currentTimeMillis();
     }
 

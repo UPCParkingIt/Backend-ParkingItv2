@@ -6,7 +6,6 @@ import com.parkingit.cloud.parking.domain.model.commands.*;
 import com.parkingit.cloud.parking.domain.model.entities.Alert;
 import com.parkingit.cloud.parking.domain.model.entities.ParkingPromotion;
 import com.parkingit.cloud.parking.domain.model.events.AlertGeneratedEvent;
-import com.parkingit.cloud.parking.domain.model.events.ParkingCreatedEvent;
 import com.parkingit.cloud.parking.domain.model.events.PromotionCreatedEvent;
 import com.parkingit.cloud.parking.domain.model.valueobjects.AlertStatus;
 import com.parkingit.cloud.parking.domain.model.valueobjects.Location;
@@ -55,7 +54,8 @@ public class ParkingCommandServiceImpl implements ParkingCommandService {
                     command.openTime(),
                     command.closeTime(),
                     command.businessDays(),
-                    command.adminUserId()
+                    command.adminUserId(),
+                    command.reservationFee()
             );
 
             var savedParking = parkingRepository.save(newParking);
@@ -134,6 +134,15 @@ public class ParkingCommandServiceImpl implements ParkingCommandService {
                     log.debug("[ParkingCommandService] Parking tariff updated to: {}", command.newTariff());
                 } catch (IllegalArgumentException e) {
                     throw new IllegalArgumentException("Invalid tariff data: " + e.getMessage());
+                }
+            }
+
+            if (command.newReservationFee() != null) {
+                try {
+                    parking.setReservationFee(command.newReservationFee());
+                    log.debug("[ParkingCommandService] Parking reservation fee updated to: {}", command.newReservationFee());
+                } catch (IllegalArgumentException e) {
+                    throw new IllegalArgumentException("Invalid reservation fee data: " + e.getMessage());
                 }
             }
 

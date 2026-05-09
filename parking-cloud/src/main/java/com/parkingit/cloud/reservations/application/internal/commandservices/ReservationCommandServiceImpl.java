@@ -55,8 +55,7 @@ public class ReservationCommandServiceImpl implements ReservationCommandService 
             var reservation = Reservation.create(
                     command.userId(),
                     command.parkingId(),
-                    timeSlot,
-                    command.reservationFee()
+                    timeSlot
             );
 
             reservation = reservationRepository.save(reservation);

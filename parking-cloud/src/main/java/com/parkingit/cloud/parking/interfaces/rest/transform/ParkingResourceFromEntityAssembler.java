@@ -21,6 +21,7 @@ public class ParkingResourceFromEntityAssembler {
                 entity.getOperationSchedule().getBusinessDays(),
                 entity.getStatus(),
                 entity.getAdminUserId(),
+                entity.getReservationFee(),
                 entity.getIsActive(),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()

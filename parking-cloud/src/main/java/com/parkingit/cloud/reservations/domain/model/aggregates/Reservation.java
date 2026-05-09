@@ -38,9 +38,6 @@ public class Reservation extends AuditableAbstractAggregateRoot<Reservation> {
     @Column(name = "entry_time")
     private LocalDateTime entryTime;
 
-    @Column(name = "reservation_fee")
-    private BigDecimal reservationFee;
-
 
     @Column(name = "cancellation_reason")
     private String cancellationReason;
@@ -51,8 +48,7 @@ public class Reservation extends AuditableAbstractAggregateRoot<Reservation> {
     public static Reservation create(
             UUID userId,
             UUID parkingId,
-            ReservationTimeSlot timeSlot,
-            BigDecimal reservationFee
+            ReservationTimeSlot timeSlot
     ) {
         if (userId == null || parkingId == null || timeSlot == null) {
             throw new IllegalArgumentException("userId, parkingId and timeSlot cannot be null");
@@ -66,7 +62,6 @@ public class Reservation extends AuditableAbstractAggregateRoot<Reservation> {
         reservation.status = ReservationStatus.PENDING;
         reservation.timeSlot = timeSlot;
         reservation.accessCode = AccessCode.generate(accessCodeExpiresAt);
-        reservation.reservationFee = reservationFee;
         reservation.cancellationReason = null;
 
         return reservation;

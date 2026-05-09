@@ -7,7 +7,6 @@ import java.util.UUID;
 public record CreateReservationResource(
         UUID userId,
         UUID parkingId,
-        LocalDateTime reservedFromTime,
-        BigDecimal reservationFee
+        LocalDateTime reservedFromTime
 ) {
 }

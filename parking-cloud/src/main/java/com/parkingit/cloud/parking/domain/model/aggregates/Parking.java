@@ -46,6 +46,9 @@ public class Parking extends AuditableAbstractAggregateRoot<Parking> {
     @Column(name = "admin_user_id", nullable = false)
     private UUID adminUserId;
 
+    @Column(name = "reservation_fee")
+    private BigDecimal reservationFee;
+
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
 
@@ -75,7 +78,8 @@ public class Parking extends AuditableAbstractAggregateRoot<Parking> {
             LocalTime openTime,
             LocalTime closeTime,
             String businessDays,
-            UUID adminUserId
+            UUID adminUserId,
+            BigDecimal reservationFee
     ) {
         if (parkingName == null || parkingName.isEmpty()) {
             throw new IllegalArgumentException("Parking name cannot be empty");
@@ -89,6 +93,10 @@ public class Parking extends AuditableAbstractAggregateRoot<Parking> {
             throw new IllegalArgumentException("Admin user ID cannot be null");
         }
 
+        if (reservationFee ==  null) {
+            throw new IllegalArgumentException("Reservation Fee cannot be null");
+        }
+
         Parking parking = new Parking();
         parking.parkingName = parkingName.trim();
         parking.location = Location.create(latitude, longitude, address);
@@ -97,6 +105,7 @@ public class Parking extends AuditableAbstractAggregateRoot<Parking> {
         parking.totalSpots = totalSpots;
         parking.availableSpots = totalSpots;
         parking.adminUserId = adminUserId;
+        parking.reservationFee = reservationFee;
         parking.status = ParkingStatus.OPEN;
         parking.isActive = true;
 
@@ -109,11 +118,11 @@ public class Parking extends AuditableAbstractAggregateRoot<Parking> {
         return parking;
     }
 
-    public void updateTariff(BigDecimal newRate) {
+    public void updateTariff(BigDecimal newTariff) {
         if (tariff == null) {
             throw new IllegalStateException("Parking tariff not initialized");
         }
-        tariff.update(newRate);
+        tariff.update(newTariff);
     }
 
     public void updateSchedule(LocalTime openTime, LocalTime closeTime, String businessDays) {

@@ -15,7 +15,6 @@ public record ReservationResource(
         LocalDateTime accessCodeExpiresAt,
         String accessCode,
         ReservationStatus status,
-        BigDecimal reservationFee,
         LocalDateTime entryTime,
         Date createdAt
 ) {

@@ -25,8 +25,8 @@ public class ReservationContextFacadeImpl implements ReservationContextFacade {
     private final ReservationQueryService reservationQueryService;
 
     @Override
-    public UUID createReservation(UUID userId, UUID parkingId, LocalDateTime reservedFromTime, BigDecimal reservationFee) {
-        var command = new CreateReservationCommand(userId, parkingId, reservedFromTime, reservationFee);
+    public UUID createReservation(UUID userId, UUID parkingId, LocalDateTime reservedFromTime) {
+        var command = new CreateReservationCommand(userId, parkingId, reservedFromTime);
         var result = reservationCommandService.handle(command);
         return result.map(AuditableAbstractAggregateRoot::getId).orElse(null);
     }

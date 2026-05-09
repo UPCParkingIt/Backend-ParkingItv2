@@ -16,7 +16,8 @@ public class CreateParkingCommandFromResourceAssembler {
                 resource.openTime(),
                 resource.closeTime(),
                 resource.businessDays(),
-                resource.adminUserId()
+                resource.adminUserId(),
+                resource.reservationFee()
         );
     }
 }

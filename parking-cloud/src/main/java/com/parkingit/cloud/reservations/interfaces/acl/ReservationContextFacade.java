@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface ReservationContextFacade {
-    UUID createReservation(UUID userId, UUID parkingId, LocalDateTime reservedFromTime, BigDecimal reservationFee);
+    UUID createReservation(UUID userId, UUID parkingId, LocalDateTime reservedFromTime);
     Optional<Reservation> fetchReservationById(UUID id);
     Boolean cancelReservation(UUID reservationId, String reason);
 }

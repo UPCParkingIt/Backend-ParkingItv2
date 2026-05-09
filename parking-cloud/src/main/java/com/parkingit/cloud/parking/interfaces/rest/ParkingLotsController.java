@@ -57,7 +57,8 @@ public class ParkingLotsController {
                 resource.openTime(),
                 resource.closeTime(),
                 resource.businessDays(),
-                resource.adminUserId()
+                resource.adminUserId(),
+                resource.reservationFee()
         ));
 
         if (parking.isEmpty()) {
@@ -92,7 +93,8 @@ public class ParkingLotsController {
                 resource.openTime(),
                 resource.closeTime(),
                 resource.businessDays(),
-                resource.newTariff()
+                resource.newTariff(),
+                resource.newReservationFee()
         ));
 
         if (updatedParking.isEmpty()) {

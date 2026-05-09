@@ -15,6 +15,7 @@ public record CreateParkingResource(
         LocalTime openTime,
         LocalTime closeTime,
         String businessDays,
-        UUID adminUserId
+        UUID adminUserId,
+        BigDecimal reservationFee
 ) {
 }

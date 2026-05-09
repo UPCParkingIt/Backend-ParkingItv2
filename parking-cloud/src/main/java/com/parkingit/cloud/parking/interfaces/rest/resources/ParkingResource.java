@@ -23,6 +23,7 @@ public record ParkingResource(
         String businessDays,
         ParkingStatus status,
         UUID adminUserId,
+        BigDecimal reservationFee,
         Boolean isActive,
         Date createdAt,
         Date updatedAt
