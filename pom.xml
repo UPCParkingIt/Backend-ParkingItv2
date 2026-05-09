@@ -22,7 +22,6 @@
     <modules>
         <module>parking-shared</module>
         <module>parking-cloud</module>
-        <module>parking-edge</module>
     </modules>
 
     <properties>
