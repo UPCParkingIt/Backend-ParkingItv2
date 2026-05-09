@@ -308,6 +308,25 @@ public class ParkingCommandServiceImpl implements ParkingCommandService {
     }
 
     @Override
+    public void handle(ActivatePromotionCommand command) {
+        try {
+            var optPromotion = promotionRepository.findById(command.id());
+
+            if (optPromotion.isEmpty()) {
+                throw new IllegalArgumentException("Promotion with id " + command.id() + " does not exist.");
+            } else {
+                var promotion = optPromotion.get();
+
+                promotion.setIsActive(true);
+
+                promotionRepository.save(promotion);
+            }
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Error while activating promotion: " + e.getMessage());
+        }
+    }
+
+    @Override
     public void handle(OccupySpotCommand command) {
         try {
             log.debug("[ParkingCommandService] Occupying spot for parking: {}", command.parkingId());

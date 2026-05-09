@@ -1,0 +1,8 @@
+package com.parkingit.edge.recognition.domain.model.commands;
+
+import java.util.UUID;
+
+public record DeactivateRecognitionCommand(
+        UUID sessionId
+) {
+}

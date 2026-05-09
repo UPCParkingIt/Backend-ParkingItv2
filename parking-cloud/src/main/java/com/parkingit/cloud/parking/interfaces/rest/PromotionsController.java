@@ -1,5 +1,6 @@
 package com.parkingit.cloud.parking.interfaces.rest;
 
+import com.parkingit.cloud.parking.domain.model.commands.ActivatePromotionCommand;
 import com.parkingit.cloud.parking.domain.model.commands.CreatePromotionCommand;
 import com.parkingit.cloud.parking.domain.model.commands.DeactivatePromotionCommand;
 import com.parkingit.cloud.parking.domain.model.queries.GetAllPromotionsByParkingIdQuery;
@@ -74,5 +75,14 @@ public class PromotionsController {
         parkingCommandService.handle(new DeactivatePromotionCommand(promotionId));
 
         return ResponseEntity.ok("Promotion deactivated successfully");
+    }
+
+    @PutMapping("/{promotionId}")
+    @Operation(summary = "Activate a promotion")
+    @ApiResponse(responseCode = "200", description = "Promotion activated successfully", content = @Content(mediaType = "application/json"))
+    public ResponseEntity<?> activatePromotion(@PathVariable UUID promotionId) {
+        parkingCommandService.handle(new ActivatePromotionCommand(promotionId));
+
+        return ResponseEntity.ok("Promotion activated successfully");
     }
 }
