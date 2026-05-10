@@ -97,7 +97,7 @@ public class LogsController {
     public ResponseEntity<LogResource> getLogById(@PathVariable UUID id) {
         var log = logQueryService.handle(new GetParkingLogByIdQuery(id));
         if (log.isEmpty()) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.notFound().build();
         }
         var resource = LogResourceFromEntityAssembler.toResourceFromEntity(log.get());
         return ResponseEntity.ok(resource);
@@ -116,7 +116,7 @@ public class LogsController {
     public ResponseEntity<List<LogResource>> getLogsByParkingId(@PathVariable UUID parkingId) {
         var log = logQueryService.handle(new GetAllParkingLogsByParkingIdQuery(parkingId));
         if (log.isEmpty()) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.ok(List.of());
         }
         List<LogResource> resources = log.stream()
                 .map(LogResourceFromEntityAssembler::toResourceFromEntity)
@@ -137,7 +137,7 @@ public class LogsController {
     public ResponseEntity<List<AlertLogResource>> getAlertsByParkingId(@PathVariable UUID parkingId) {
         var log = logQueryService.handle(new GetAllAlertsGeneratedByParkingIdQuery(parkingId));
         if (log.isEmpty()) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.ok(List.of());
         }
         List<AlertLogResource> resources = log.stream()
                 .map(AlertLogResourceFromEntityAssembler::toResourceFromEntity)
