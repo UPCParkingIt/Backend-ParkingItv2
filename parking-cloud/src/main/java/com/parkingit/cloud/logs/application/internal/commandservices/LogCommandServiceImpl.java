@@ -72,9 +72,6 @@ public class LogCommandServiceImpl implements LogCommandService {
 
     @Override
     public Optional<ParkingLog> handle(RecordExitLogCommand command) {
-        if (command.entryLogId() == null) {
-            throw new InvalidLogException("Entry log ID cannot be null");
-        }
         if (command.licensePlate() == null || command.licensePlate().isBlank()) {
             throw new InvalidLogException("License plate cannot be null or empty");
         }
@@ -86,15 +83,18 @@ public class LogCommandServiceImpl implements LogCommandService {
         }
 
         ParkingLog parkingLog = logRepository.findAll().stream()
-                .filter(pl -> pl.getEntryLog() != null && pl.getEntryLog().getId().equals(command.entryLogId()))
+                .filter(pl -> pl.getEntryLog() != null 
+                        && pl.getExitLog() == null 
+                        && pl.getLicensePlate().getValue().equals(command.licensePlate())
+                        && pl.getParkingId().equals(command.parkingId()))
                 .findFirst()
-                .orElseThrow(() -> new ParkingLogNotFoundException("Parking log not found for entry log ID: " + command.entryLogId()));
+                .orElseThrow(() -> new ParkingLogNotFoundException("Active parking log not found for license plate: " + command.licensePlate()));
 
         LicensePlate licensePlate = new LicensePlate(command.licensePlate());
         FacialEmbedding facialEmbedding = new FacialEmbedding(command.facialEmbedding());
         VerificationResult verificationResult = VerificationResult.create(command.isMatched(), command.confidenceScore());
 
-        ExitLog exitLog = ExitLog.create(licensePlate, facialEmbedding, verificationResult, command.parkingId(), command.entryLogId());
+        ExitLog exitLog = ExitLog.create(licensePlate, facialEmbedding, verificationResult, command.parkingId(), parkingLog.getEntryLog().getId());
         exitLog = exitLogRepository.save(exitLog);
 
         parkingLog.recordExit(exitLog);
