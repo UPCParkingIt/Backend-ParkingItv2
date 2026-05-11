@@ -49,6 +49,18 @@ public class LogCommandServiceImpl implements LogCommandService {
             throw new InvalidLogException("Parking ID cannot be null");
         }
 
+        // Idempotency check: prevent duplicate entries for the same vehicle
+        Optional<ParkingLog> existingLog = logRepository.findAll().stream()
+                .filter(pl -> pl.getExitLog() == null
+                        && pl.getLicensePlate().getValue().equals(command.licensePlate())
+                        && pl.getParkingId().equals(command.parkingId()))
+                .findFirst();
+
+        if (existingLog.isPresent()) {
+            log.info("Vehicle {} is already in parking lot {}. Ignoring duplicate entry log.", command.licensePlate(), command.parkingId());
+            return existingLog;
+        }
+
         LicensePlate licensePlate = new LicensePlate(command.licensePlate());
         FacialEmbedding facialEmbedding = new FacialEmbedding(command.facialEmbedding());
 
