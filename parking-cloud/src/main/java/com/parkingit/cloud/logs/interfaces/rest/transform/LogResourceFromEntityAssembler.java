@@ -16,8 +16,8 @@ public class LogResourceFromEntityAssembler {
                 entity.getOccupancyDurationMinutes(),
                 entity.getIsAlertGenerated(),
                 entity.getAlertReason(),
-                entity.getEntryLog().getEntryTimestamp().toInstant(ZoneOffset.UTC),
-                entity.getExitLog().getExitTimestamp().toInstant(ZoneOffset.UTC),
+                entity.getEntryLog() != null ? entity.getEntryLog().getEntryTimestamp().toInstant(ZoneOffset.UTC) : null,
+                entity.getExitLog() != null ? entity.getExitLog().getExitTimestamp().toInstant(ZoneOffset.UTC) : null,
                 entity.getCreatedAt().toInstant()
         );
     }
