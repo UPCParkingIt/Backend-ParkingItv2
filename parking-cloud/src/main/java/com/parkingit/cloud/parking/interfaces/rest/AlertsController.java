@@ -2,6 +2,8 @@ package com.parkingit.cloud.parking.interfaces.rest;
 
 import com.parkingit.cloud.parking.domain.model.commands.CreateAlertCommand;
 import com.parkingit.cloud.parking.domain.model.commands.ReviewAlertCommand;
+import com.parkingit.cloud.parking.domain.model.commands.ResolveAlertCommand;
+import com.parkingit.cloud.parking.domain.model.commands.MarkAsFalseAlarmCommand;
 import com.parkingit.cloud.parking.domain.model.queries.GetAllAlertsByParkingIdAndStatusQuery;
 import com.parkingit.cloud.parking.domain.model.queries.GetAllAlertsByParkingIdQuery;
 import com.parkingit.cloud.parking.domain.model.valueobjects.AlertStatus;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.constraints.NotBlank;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -114,10 +117,9 @@ public class AlertsController {
     @Operation(summary = "Review an alert", description = "Marks an alert as reviewed by admin and adds notes for audit trail")
     @ApiResponse(responseCode = "200", description = "Alert reviewed successfully")
     @ApiResponse(responseCode = "404", description = "Alert not found")
-    public ResponseEntity<?> reviewAlert(@PathVariable UUID alertId, @RequestParam @NotBlank String notes) {
+    public ResponseEntity<Map<String, String>> reviewAlert(@PathVariable UUID alertId, @RequestParam @NotBlank String notes) {
         parkingCommandService.handle(new ReviewAlertCommand(alertId, notes));
-
-        return ResponseEntity.ok("Alert reviewed successfully");
+        return ResponseEntity.ok(Map.of("message", "Alert reviewed successfully"));
     }
 
     /**
@@ -132,10 +134,9 @@ public class AlertsController {
     @Operation(summary = "Resolve an alert", description = "Marks an alert as resolved and closes the incident. Stores resolution details")
     @ApiResponse(responseCode = "200", description = "Alert resolved successfully")
     @ApiResponse(responseCode = "404", description = "Alert not found")
-    public ResponseEntity<?> resolveAlert(@PathVariable UUID alertId, @RequestParam @NotBlank String notes) {
-        parkingCommandService.handle(new ReviewAlertCommand(alertId, notes));
-
-        return ResponseEntity.ok("Alert resolved successfully");
+    public ResponseEntity<Map<String, String>> resolveAlert(@PathVariable UUID alertId, @RequestParam @NotBlank String notes) {
+        parkingCommandService.handle(new ResolveAlertCommand(alertId, notes));
+        return ResponseEntity.ok(Map.of("message", "Alert resolved successfully"));
     }
 
     /**
@@ -151,9 +152,8 @@ public class AlertsController {
     @Operation(summary = "Mark alert as false alarm", description = "Marks an alert as a false alarm (incorrect detection). Helps improve system accuracy")
     @ApiResponse(responseCode = "200", description = "Alert marked as false alarm successfully")
     @ApiResponse(responseCode = "404", description = "Alert not found")
-    public ResponseEntity<?> markAsFalseAlarm(@PathVariable UUID alertId, @RequestParam @NotBlank String notes) {
-        parkingCommandService.handle(new ReviewAlertCommand(alertId, notes));
-
-        return ResponseEntity.ok("Alert marked as false alarm");
+    public ResponseEntity<Map<String, String>> markAsFalseAlarm(@PathVariable UUID alertId, @RequestParam @NotBlank String notes) {
+        parkingCommandService.handle(new MarkAsFalseAlarmCommand(alertId, notes));
+        return ResponseEntity.ok(Map.of("message", "Alert marked as false alarm"));
     }
 }
