@@ -19,7 +19,7 @@ import java.util.UUID;
 @Getter
 @Setter(AccessLevel.PRIVATE)
 public class Payment extends AuditableAbstractAggregateRoot<Payment> {
-    @Column(name = "reservation_id", nullable = false)
+    @Column(name = "reservation_id")
     private UUID reservationId;
 
     @Column(name = "parking_log_id")

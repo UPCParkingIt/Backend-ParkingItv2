@@ -2,6 +2,7 @@ package com.parkingit.cloud.payments.domain.services;
 
 import com.parkingit.cloud.payments.domain.model.aggregates.Payment;
 import com.parkingit.cloud.payments.domain.model.queries.GetAllPaymentsByReservationIdQuery;
+import com.parkingit.cloud.payments.domain.model.queries.GetAllPendingPaymentsQuery;
 import com.parkingit.cloud.payments.domain.model.queries.GetPaymentByIdQuery;
 import com.parkingit.cloud.payments.domain.model.queries.GetPaymentByReferenceNumberQuery;
 
@@ -12,4 +13,5 @@ public interface PaymentQueryService {
     Optional<Payment> handle(GetPaymentByIdQuery query);
     Optional<Payment> handle(GetPaymentByReferenceNumberQuery query);
     List<Payment> handle(GetAllPaymentsByReservationIdQuery query);
+    List<Payment> handle(GetAllPendingPaymentsQuery query);
 }

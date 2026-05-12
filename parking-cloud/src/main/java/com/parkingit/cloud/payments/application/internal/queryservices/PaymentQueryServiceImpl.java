@@ -2,8 +2,10 @@ package com.parkingit.cloud.payments.application.internal.queryservices;
 
 import com.parkingit.cloud.payments.domain.model.aggregates.Payment;
 import com.parkingit.cloud.payments.domain.model.queries.GetAllPaymentsByReservationIdQuery;
+import com.parkingit.cloud.payments.domain.model.queries.GetAllPendingPaymentsQuery;
 import com.parkingit.cloud.payments.domain.model.queries.GetPaymentByIdQuery;
 import com.parkingit.cloud.payments.domain.model.queries.GetPaymentByReferenceNumberQuery;
+import com.parkingit.cloud.payments.domain.model.valueobjects.PaymentStage;
 import com.parkingit.cloud.payments.domain.services.PaymentQueryService;
 import com.parkingit.cloud.payments.infrastructure.persistence.jpa.repositories.PaymentRepository;
 import lombok.AllArgsConstructor;
@@ -35,5 +37,11 @@ public class PaymentQueryServiceImpl implements PaymentQueryService {
     public List<Payment> handle(GetAllPaymentsByReservationIdQuery query) {
         log.debug("[PaymentQueryService] Getting all payments for reservation: {}", query.reservationId());
         return paymentRepository.findAllByReservationId(query.reservationId());
+    }
+
+    @Override
+    public List<Payment> handle(GetAllPendingPaymentsQuery query) {
+        log.debug("[PaymentQueryService] Getting pending admin review payments");
+        return paymentRepository.findAllByPaymentStage(PaymentStage.PENDING_ADMIN_REVIEW);
     }
 }

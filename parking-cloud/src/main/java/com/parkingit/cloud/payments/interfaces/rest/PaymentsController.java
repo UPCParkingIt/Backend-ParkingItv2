@@ -4,11 +4,14 @@ import com.parkingit.cloud.payments.domain.model.commands.ApprovePaymentCommand;
 import com.parkingit.cloud.payments.domain.model.commands.MarkDriverPaidCommand;
 import com.parkingit.cloud.payments.domain.model.commands.RejectPaymentCommand;
 import com.parkingit.cloud.payments.domain.model.queries.GetAllPaymentsByReservationIdQuery;
+import com.parkingit.cloud.payments.domain.model.queries.GetAllPendingPaymentsQuery;
 import com.parkingit.cloud.payments.domain.model.queries.GetPaymentByIdQuery;
 import com.parkingit.cloud.payments.domain.services.PaymentCommandService;
 import com.parkingit.cloud.payments.domain.services.PaymentQueryService;
+import com.parkingit.cloud.payments.interfaces.rest.resources.InitiateExitPaymentResource;
 import com.parkingit.cloud.payments.interfaces.rest.resources.InitiatePaymentResource;
 import com.parkingit.cloud.payments.interfaces.rest.resources.PaymentResource;
+import com.parkingit.cloud.payments.interfaces.rest.transform.InitiateExitPaymentCommandFromResourceAssembler;
 import com.parkingit.cloud.payments.interfaces.rest.transform.InitiatePaymentCommandFromResourceAssembler;
 import com.parkingit.cloud.payments.interfaces.rest.transform.PaymentResourceFromEntityAssembler;
 import io.swagger.v3.oas.annotations.Operation;
@@ -60,14 +63,48 @@ public class PaymentsController {
         }
     }
 
+    @PostMapping("/exit")
+    @Operation(summary = "Initiate a new exit payment", description = "Creates and initiates an exit payment for a guest")
+    public ResponseEntity<PaymentResource> initiateExitPayment(@RequestBody InitiateExitPaymentResource request) {
+        log.info("[PaymentsController] Initiating exit payment for parkingLogId: {}", request.parkingLogId());
+
+        try {
+            var command = InitiateExitPaymentCommandFromResourceAssembler.toCommandFromResource(request);
+            var payment = paymentCommandService.handle(command).orElseThrow(() -> new RuntimeException("Failed to initiate exit payment"));
+
+            var response = PaymentResourceFromEntityAssembler.toResourceFromEntity(payment);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (Exception e) {
+            log.error("[PaymentsController] Error initiating exit payment: {}", e.getMessage(), e);
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("/pending-review")
+    @Operation(summary = "Get pending review payments", description = "Retrieves all payments waiting for admin approval")
+    public ResponseEntity<List<PaymentResource>> getAllPendingReviewPayments() {
+        log.info("[PaymentsController] Fetching pending review payments");
+
+        try {
+            var payments = paymentQueryService.handle(new GetAllPendingPaymentsQuery());
+            var responses = payments.stream()
+                    .map(PaymentResourceFromEntityAssembler::toResourceFromEntity)
+                    .toList();
+
+            return ResponseEntity.ok(responses);
+        } catch (Exception e) {
+            log.error("[PaymentsController] Error fetching pending payments: {}", e.getMessage(), e);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "Get payment by ID", description = "Retrieves payment details by its unique identifier")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Payment found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PaymentResource.class))),
             @ApiResponse(responseCode = "404", description = "Payment not found")
     })
-    public ResponseEntity<PaymentResource> getPaymentById(
-            @Parameter(description = "Payment unique identifier") @PathVariable UUID id) {
+    public ResponseEntity<PaymentResource> getPaymentById(@Parameter(description = "Payment unique identifier") @PathVariable UUID id) {
         log.info("[PaymentsController] Fetching payment: id={}", id);
 
         try {
@@ -92,8 +129,7 @@ public class PaymentsController {
             @ApiResponse(responseCode = "200", description = "Payments retrieved", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "Reservation not found")
     })
-    public ResponseEntity<List<PaymentResource>> getPaymentsByReservation(
-            @Parameter(description = "Reservation unique identifier") @PathVariable UUID reservationId) {
+    public ResponseEntity<List<PaymentResource>> getPaymentsByReservation(@Parameter(description = "Reservation unique identifier") @PathVariable UUID reservationId) {
         log.info("[PaymentsController] Fetching payments for reservation: {}", reservationId);
 
         try {
@@ -149,7 +185,8 @@ public class PaymentsController {
     public ResponseEntity<PaymentResource> approvePayment(
             @PathVariable UUID id,
             @RequestParam UUID adminId,
-            @RequestParam String notes) {
+            @RequestParam String notes
+    ) {
         log.info("[PaymentsController] Approving payment: id={}, admin={}", id, adminId);
 
         try {
@@ -171,7 +208,8 @@ public class PaymentsController {
     public ResponseEntity<PaymentResource> rejectPayment(
             @PathVariable UUID id,
             @RequestParam UUID adminId,
-            @RequestParam String reason) {
+            @RequestParam String reason
+    ) {
         log.info("[PaymentsController] Rejecting payment: id={}, admin={}", id, adminId);
 
         try {
