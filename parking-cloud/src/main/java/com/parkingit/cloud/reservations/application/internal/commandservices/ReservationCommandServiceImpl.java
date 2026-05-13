@@ -1,5 +1,6 @@
 package com.parkingit.cloud.reservations.application.internal.commandservices;
 
+import com.parkingit.cloud.parking.domain.model.aggregates.Parking;
 import com.parkingit.cloud.reservations.application.internal.outboundservices.acl.ExternalIamService;
 import com.parkingit.cloud.reservations.application.internal.outboundservices.acl.ExternalParkingService;
 import com.parkingit.cloud.reservations.domain.model.aggregates.Reservation;
@@ -61,7 +62,7 @@ public class ReservationCommandServiceImpl implements ReservationCommandService 
             reservation = reservationRepository.save(reservation);
 
             String parkingName = externalParkingService.fetchParkingById(reservation.getParkingId())
-                    .map(com.parkingit.cloud.parking.domain.model.aggregates.Parking::getName)
+                    .map(Parking::getParkingName)
                     .orElse("Estacionamiento Reservado");
 
             eventPublisher.publishEvent(new ReservationCreatedEvent(
