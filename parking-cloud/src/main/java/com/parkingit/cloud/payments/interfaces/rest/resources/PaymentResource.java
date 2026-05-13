@@ -1,6 +1,7 @@
 package com.parkingit.cloud.payments.interfaces.rest.resources;
 
 import com.parkingit.cloud.payments.domain.model.valueobjects.PaymentMethod;
+import com.parkingit.cloud.payments.domain.model.valueobjects.PaymentStage;
 import com.parkingit.cloud.payments.domain.model.valueobjects.PaymentStatus;
 
 import java.math.BigDecimal;
