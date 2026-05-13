@@ -15,10 +15,6 @@ public class DNI {
     protected DNI() {}
 
     public DNI(String value) {
-        if (value == null || value.trim().isEmpty()) {
-            throw new IllegalArgumentException("DNI cannot be empty");
-        }
-
         String normalized = value.trim();
         if (!isValidDNI(normalized)) {
             throw new IllegalArgumentException("Invalid DNI format. Expected 8 digits: " + value);

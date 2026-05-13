@@ -11,6 +11,7 @@ public class PaymentResourceFromEntityAssembler {
                 entity.getAmount().getAmount(),
                 entity.getAmount().getCurrency(),
                 entity.getPaymentMethod(),
+                entity.getPaymentStage(),
                 entity.getStatus(),
                 entity.getReferenceNumber(),
                 entity.getExternalTransactionId(),

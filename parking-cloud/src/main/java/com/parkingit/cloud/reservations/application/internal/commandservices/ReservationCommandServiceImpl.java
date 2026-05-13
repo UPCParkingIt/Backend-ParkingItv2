@@ -60,10 +60,15 @@ public class ReservationCommandServiceImpl implements ReservationCommandService 
 
             reservation = reservationRepository.save(reservation);
 
+            String parkingName = externalParkingService.fetchParkingById(reservation.getParkingId())
+                    .map(com.parkingit.cloud.parking.domain.model.aggregates.Parking::getName)
+                    .orElse("Estacionamiento Reservado");
+
             eventPublisher.publishEvent(new ReservationCreatedEvent(
                     reservation.getId(),
                     reservation.getUserId(),
                     reservation.getParkingId(),
+                    parkingName,
                     reservation.getAccessCode().getCode(),
                     reservation.getTimeSlot().getReservedFromTime(),
                     reservation.getAccessCode().getExpiresAt(),

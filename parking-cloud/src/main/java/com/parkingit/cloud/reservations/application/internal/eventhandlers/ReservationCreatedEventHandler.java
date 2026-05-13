@@ -35,6 +35,7 @@ public class ReservationCreatedEventHandler {
 
             externalNotificationService.sendReservationCreatedEmail(
                     userOpt.get(),
+                    event.getParkingName(),
                     event.getAccessCode(),
                     event.getReservedFromTime(),
                     event.getAccessCodeExpiresAt()

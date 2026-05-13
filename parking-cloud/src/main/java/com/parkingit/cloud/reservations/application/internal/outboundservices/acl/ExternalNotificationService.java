@@ -34,13 +34,14 @@ public class ExternalNotificationService {
      */
     public void sendReservationCreatedEmail(
             User user,
+            String parkingName,
             String accessCode,
             LocalDateTime reservedFromTime,
             LocalDateTime accessCodeExpiresAt
     ) {
         try {
             String firstName = user.getPersonName().getFirstName();
-            String body = buildReservationCreatedBody(firstName, accessCode, reservedFromTime, accessCodeExpiresAt);
+            String body = buildReservationCreatedBody(firstName, parkingName, accessCode, reservedFromTime, accessCodeExpiresAt);
 
             notificationContextFacade.createNotification(
                     user,
@@ -108,6 +109,7 @@ public class ExternalNotificationService {
 
     private String buildReservationCreatedBody(
             String firstName,
+            String parkingName,
             String accessCode,
             LocalDateTime reservedFromTime,
             LocalDateTime accessCodeExpiresAt
@@ -117,13 +119,13 @@ public class ExternalNotificationService {
 
         return String.format(
                 "¡Hola %s!%n%n" +
-                "Tu reserva en ParkingIT ha sido confirmada. 🎉%n%n" +
+                "Tu reserva en %s ha sido confirmada. 🎉%n%n" +
                 "🔐 CÓDIGO DE ACCESO:%n" +
                 "┌──────────────────┐%n" +
                 "│    %s    │%n" +
                 "└──────────────────┘%n%n" +
                 "📌 CÓMO USARLO:%n" +
-                "1️⃣  Preséntate en la entrada del estacionamiento.%n" +
+                "1️⃣  Preséntate en la entrada de %s.%n" +
                 "2️⃣  Entrega este código al operador o ingrésalo en el panel.%n" +
                 "3️⃣  La tarifa por horas comenzará a contar desde el momento en que reclames tu lugar.%n%n" +
                 "⏰ HORARIO DE TU RESERVA:%n" +
@@ -138,7 +140,7 @@ public class ExternalNotificationService {
                 "📞 WhatsApp: %s%n%n" +
                 "Saludos,%n" +
                 "Equipo ParkingIT 🚗",
-                firstName, accessCode, arrivalTime, deadline, deadline, SUPPORT_EMAIL, WHATSAPP_SUPPORT
+                firstName, parkingName, accessCode, parkingName, arrivalTime, deadline, deadline, SUPPORT_EMAIL, WHATSAPP_SUPPORT
         );
     }
 

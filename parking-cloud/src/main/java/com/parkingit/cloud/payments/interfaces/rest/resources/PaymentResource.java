@@ -13,6 +13,7 @@ public record PaymentResource(
         BigDecimal amount,
         String currency,
         PaymentMethod paymentMethod,
+        PaymentStage paymentStage,
         PaymentStatus status,
         String referenceNumber,
         String externalTransactionId,

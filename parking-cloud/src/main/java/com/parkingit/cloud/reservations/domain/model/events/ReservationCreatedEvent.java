@@ -14,6 +14,7 @@ public class ReservationCreatedEvent implements DomainEvent {
     private UUID reservationId;
     private UUID userId;
     private UUID parkingId;
+    private String parkingName;
     private String accessCode;
     private LocalDateTime reservedFromTime;
     private LocalDateTime accessCodeExpiresAt;
